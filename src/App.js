@@ -6,7 +6,6 @@ function App() {
   const [numCounter, setNumCounter] = useState(0);
   const [numCounterAnother, setNumCounterAnother] = useState(0);
   const [numCounterMemo, setNumCounterMemo] = useState(0);
-  const [numCounterNoHandler, setNumCounterNoHandler] = useState(0);
 
   // useCallback does not prevent a re-render due to the fact that functional equality cannot be checked
   const onCounterAddClick = useCallback(() => {
@@ -21,34 +20,11 @@ function App() {
     setNumCounterMemo(numCounterMemo + 1);
   }, [numCounterMemo]);
 
-  useEffect(() => {
-    const clickListener = (e) => {
-      // console.log(e.target, e.target.id);
-      if (e.target.id === "CounterNoHandler") {
-        setNumCounterNoHandler(numCounterNoHandler + 1);
-      }
-    };
-
-    document.addEventListener("click", clickListener);
-    return () => {
-      document.removeEventListener("click", clickListener);
-    };
-  }, [numCounterNoHandler]);
-
-  /*
-  useEffect(() => {
-    setInterval(() => {
-      setNumCounter(n => n + 1);
-    }, 1000);
-  }, []);
-  */
-
   return (
     <div>
       <Counter num={numCounter} onCounterAddClick={onCounterAddClick} />
       <CounterAnother num={numCounterAnother} onCounterAnotherAddClick={onCounterAnotherAddClick} />
       <CounterMemo num={numCounterMemo} onCounterMemoAddClick={onCounterMemoAddClick} />
-      <CounterNoHandler num={numCounterNoHandler} />
     </div>
   );
 }
@@ -82,12 +58,6 @@ const CounterMemo = memo(
     return true; // props are equal
   }
 );
-
-function CounterNoHandler({ num = 0 }) {
-  usePropsUpdate({ num });
-  console.count("CounterNoHandler");
-  return <CounterContents num={num} title="CounterNoHandler" />;
-}
 
 function CounterContents({ num = 0, title = "", onClick = () => {} }) {
   return (
